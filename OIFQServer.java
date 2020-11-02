@@ -37,14 +37,14 @@ public class OIFQServer extends Thread
 				if(count==2)
 					break;
 			}catch(IOException e)
-        	{
-            	e.printStackTrace();
+        		{
+            			e.printStackTrace();
 				break;
-        	}/*catch(SocketTimeoutException s)
-        	{
-            	System.out.println("Socket timed out!");
-            	break;
-        	}*/
+        		}/*catch(SocketTimeoutException s)
+        		{
+            		System.out.println("Socket timed out!");
+            		break;
+        		}*/
 		}
 		count=0;
 		while(true)
@@ -59,6 +59,7 @@ public class OIFQServer extends Thread
 		Socket socket = null;
 		DataInputStream in = null;
 		DataOutputStream out = null;
+		DataOutputStream outself = null;
 		int bind;
 
 		public Handler(Socket[] socket, DataInputStream[] in, DataOutputStream[] out, int count) {
@@ -66,6 +67,7 @@ public class OIFQServer extends Thread
 			this.bind = 1 - count;
 			this.in = in[count];
 			this.out = out[bind];
+			this.outself = out[count];
 		}
 
 		public void run() {
@@ -76,8 +78,7 @@ public class OIFQServer extends Thread
 					readMessage = in.readUTF();
 					System.out.println("RECIEVE:" + readMessage);
 					if (readMessage.equals("exit")) {
-						//System.out.println("EXIT");
-						//out.writeUTF("The other side closed,enter exit!");
+						outself.writeUTF("server closed!");
 						break;
 					}
 					if (readMessage != null) {
@@ -85,6 +86,7 @@ public class OIFQServer extends Thread
 					}
 				}
 				socket.close();
+				System.out.println((1-bind)+"server closed!");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -92,17 +94,13 @@ public class OIFQServer extends Thread
 	}
 
 
-	public static void main(String []args)throws Exception
-	{
+	public static void main(String []args)throws Exception{
 		int port = Integer.parseInt(args[0]);
-		try
-		{
+		try{
 			OIFQServer will = new OIFQServer(port);
 			System.out.println("server started!");
 			will.establish();
-
-		}catch(IOException e)
-		{
+		}catch(IOException e){
 			e.printStackTrace();
 		}
 	}
