@@ -87,7 +87,7 @@ public class OIFQClient extends Thread
 			OIFQClient client = new OIFQClient(serverName, port);
 			client.service.execute(new Handler("b",client.out,client.in,client.socket,flag));
 			client.service.execute(new Handler("s",client.out,client.in,client.socket,flag));
-			//client.socket.close();
+			client.service.shutdown();
 		/*}catch(IOException e)
 		{
 			e.printStackTrace();

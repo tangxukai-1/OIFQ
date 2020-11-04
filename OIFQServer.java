@@ -16,7 +16,6 @@ public class OIFQServer extends Thread
 	public OIFQServer(int port) throws IOException
 	{
 		serverSocket = new ServerSocket(port,5);
-		//serverSocket.setSoTimeout(10000);
 		count = 0;
 		server = new Socket[2];
 		in = new DataInputStream[2];
@@ -40,11 +39,7 @@ public class OIFQServer extends Thread
         		{
             			e.printStackTrace();
 				break;
-        		}/*catch(SocketTimeoutException s)
-        		{
-            		System.out.println("Socket timed out!");
-            		break;
-        		}*/
+        		}
 		}
 		count=0;
 		while(true)
@@ -54,6 +49,7 @@ public class OIFQServer extends Thread
 			if(count==2)
 				break;
 		}
+		service.shutdown();
 	}
 	static class Handler implements Runnable {
 		Socket socket = null;
